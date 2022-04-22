@@ -1,27 +1,42 @@
 'use strict';
 
-const friendList = document.querySelector('.js_list');
+const userList = document.querySelector('.js_list');
 const saveBtn = document.querySelector('.js_saveBtn');
 const recoverBtn = document.querySelector('.js_recoverBtn');
-let friends = []; //info array friends
+let user = []; //info array user
 
-//pintar info de friends
-function paintFriends() {
+//pintar info de user
+function paintuser() {
   let html = '';
-  for (const friendItem of friends) {
-    html += `<img src = "${friendItem.picture.medium}" alt="Imagen Friend" class ="friend"/>`;
-    html += `<h2 class = "js_firstnamefriend" ${friendItem.name.first}</h2>`;
-    html += `<h2 class = "js_lastnamefriend" ${friendItem.name.last}</h2>`;
-    html += `<h2 class = "js_cityfriend" ${friendItem.location.city}</h2>`;
-    html += `<h2 class = "js_usernamefriend" ${friendItem.login.username}</h2>`;
+  for (const userItem of user) {
+    html += `<li class = "js_listUser " id= "${userItem.login.uuid}">`;
+    html += `<img src = "${userItem.picture.medium}" alt="Imagen user" class ="user"/>`;
+    html += `<h2 class = "js_firstNameUser">  ${userItem.name.first} ${userItem.name.last}</h2>`;
+    html += `<h2 class = "js_cityUser">  ${userItem.location.city}</h2>`;
+    html += `<h2 class = "js_userNameUser">  ${userItem.login.username}</h2>`;
     html += `</li>`;
   }
-  friendList.innerHTML = html;
+  userList.innerHTML = html;
+  listenerUser();
 }
 //hacer fetch y guardar en variable let
 fetch(`https://randomuser.me/api/?results=10`)
   .then((response) => response.json())
   .then((data) => {
-    friends = data.results;
-    paintFriends(); //llamo a la funcion de pintar friends
+    user = data.results;
+
+    paintuser(); //llamo a la funcion de pintar user
   });
+
+//escuchar click asociado a cada usuario
+function listenerUser() {
+  const listAllUser = document.querySelectorAll('.js_listUser');
+  for (const item of listAllUser) {
+    item.addEventListener('click', handleClickUser);
+  }
+}
+
+function handleClickUser(event) {
+  event.preventDefault();
+  const idUserSelected = event.currentTarget.id;
+}
