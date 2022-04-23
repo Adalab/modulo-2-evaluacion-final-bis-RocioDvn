@@ -9,11 +9,12 @@ let user = []; //info array user
 function paintuser() {
   let html = '';
   for (const userItem of user) {
-    html += `<li class = "js_listUser " id= "${userItem.login.uuid}">`;
-    html += `<img src = "${userItem.picture.medium}" alt="Imagen user" class ="user"/>`;
-    html += `<h2 class = "js_firstNameUser">  ${userItem.name.first} ${userItem.name.last}</h2>`;
-    html += `<h2 class = "js_cityUser">  ${userItem.location.city}</h2>`;
-    html += `<h2 class = "js_userNameUser">  ${userItem.login.username}</h2>`;
+    const friendClass = user.isFriend ? 'isFriend' : '';
+    html += `<li class = "listUser js_listUser ${friendClass}" id= "${userItem.login.uuid}">`;
+    html += `<img src = ${userItem.picture.medium} alt="Imagen user" class ="Imagen"/>`;
+    html += `<h2 class = "nameFirstUser js_nameFirstUser">  ${userItem.name.first} ${userItem.name.last}</h2>`;
+    html += `<h2 class = "info js_cityUser">  ${userItem.location.city}</h2>`;
+    html += `<h2 class = "info js_userName">  ${userItem.login.username}</h2>`;
     html += `</li>`;
   }
   userList.innerHTML = html;
@@ -35,8 +36,33 @@ function listenerUser() {
     item.addEventListener('click', handleClickUser);
   }
 }
-
+//click a cada user
 function handleClickUser(event) {
   event.preventDefault();
+  const currentTarget = event.currentTarget;
   const idUserSelected = event.currentTarget.id;
+  // obetener objeto de user con su id, buscamos el user
+  const userSelected = user.find((userItem) => {
+    return userItem.login.uuid === idUserSelected;
+  });
+  //meter propiedad isFriend:true
+  userSelected.isFriend = true;
+  //meter clase isFriend al elemento(currectTarget)
+  currentTarget.classList.add('isFriend');
 }
+//guardar y recuperar en LS
+//set =guardar
+function handleClickSave() {
+  console.log(user);
+  localStorage.setItem('user', JSON.stringify(user));
+}
+
+//get = recuperar;
+function handleClickRecover() {
+  console.log(user);
+  const userLocals = localStorage.getItem('user');
+  paintuser();
+}
+
+saveBtn.addEventListener('click', handleClickSave);
+recoverBtn.addEventListener('click', handleClickRecover);
